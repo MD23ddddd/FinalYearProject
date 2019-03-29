@@ -36,14 +36,25 @@ public class DatabaseTweets {
 		Iterator desc = obj.values().iterator();
 		
 		
+		
 
 		try {
 			MongoClient client = new MongoClient();
 			DB database = client.getDB("local");
 			DBCollection collection = database.getCollection("tweets");
 			while(tags.hasNext()) {
-				JSONObject description = (JSONObject)desc.next();
-				DBObject object = new BasicDBObject("_id", tags.next() ).append("desc", ""+description.get("tweets"));
+				
+				JSONObject description = (JSONObject)desc.next();  
+				JSONObject tweetsFromDescription = (JSONObject)description.get("tweets"); //get tweets of specefic topics eg #sundaymorning
+				JSONObject modifiedObject; 
+				Iterator tweetsKeys = tweetsFromDescription.KeySet().iterator();
+				int i = 1; //primary key
+				while(tweetsKeys.hasNext()){
+					modifiedObject.put(i, tweetsKeys.next()); // modify that object where tweet id = 1,2,3 and values = tweets
+					i++:
+				}
+	
+				DBObject object = new BasicDBObject("_id", tags.next() ).append("desc", ""+modifiedObject);
 				System.out.println(object);
 				collection.insert(object);
 			}
